@@ -47,10 +47,13 @@ def create_test_measurements(output_path):
         new_coords = coordTrans.TransformPoint(float(easting[i]), float(northing[i]))
         easting[i] = new_coords[0]
         northing[i] = new_coords[1]
-    na = [2.0, 4.0]
-    mg = [0.0, 2.0]
-    al = [2.0, 2.0]
-    dataset = pd.DataFrame({'Easting':easting, 'Northing':northing, 'Na2O_%':na, 'MgO_%':mg, 'Al2O3_%': al})
+    na = [1.0, 1.0]
+    mg = [0.0, 0.5]
+    al = [1.0, 0.5]
+    si = [np.nan, 1.0]
+    p2 = [0.0, 0.0]
+    s = [np.nan, np.nan]
+    dataset = pd.DataFrame({'Easting':easting, 'Northing':northing, 'Na2O_%':na, 'MgO_%':mg, 'Al2O3_%': al, 'SiO2_%': si, 'P2O5_%': p2, 'S_mgkg': s})
     dataset.to_csv(output_path)
 
 if __name__ == '__main__':

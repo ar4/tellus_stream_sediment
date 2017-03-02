@@ -39,7 +39,7 @@ hydrosheds_flowdirections = $(input)/n50w005_dir.bil $(input)/n50w010_dir.bil $(
 ## Test
 
 # outputs
-test_results = $(output)/test_Na2O_%.tif $(output)/test_MgO_%.tif $(output)/test_Al2O3_%.tif
+test_results = $(output)/test_Na2O_%.tif $(output)/test_MgO_%.tif $(output)/test_Al2O3_%.tif $(output)/test_SiO2_%.tif $(output)/test_P2O5_%.tif $(output)/test_S_mgkg.tif
 
 
 ### Targets
@@ -95,7 +95,7 @@ test_find_upstream: $(interim)/test_upstream.npy
 	python -m pytest $(src)/test_find_upstream.py --upstream=$(interim)/test_upstream.npy
 
 test_reverse_sediment: $(test_results)
-	python -m pytest $(src)/test_reverse_sediment.py --na=$(output)/test_Na2O_%.tif --mg=$(output)/test_MgO_%.tif --al=$(output)/test_Al2O3_%.tif
+	python -m pytest $(src)/test_reverse_sediment.py --na=$(output)/test_Na2O_%.tif --mg=$(output)/test_MgO_%.tif --al=$(output)/test_Al2O3_%.tif --si=$(output)/test_SiO2_%.tif --p2=$(output)/test_P2O5_%.tif --s_=$(output)/test_S_mgkg.tif
 
 .PHONY: all test test_find_upstream test_reverse_sediment
 
