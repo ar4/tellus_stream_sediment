@@ -96,7 +96,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=str, help="path to output upstream npy file", required=True)
     parser.add_argument("--measurements", type=str, help="path to measurements csv file", required=True)
-    parser.add_argument("--measurements_epsg", type=str, help="EPSG of measurements csv file spatial reference", required=True)
+    parser.add_argument("--measurements_epsg", type=int, help="EPSG of measurements csv file spatial reference", required=True)
     parser.add_argument("--flow_directions", type=str, help="path to flow directions file", required=True)
     args = parser.parse_args()
     run(args.output, args.measurements, args.measurements_epsg, args.flow_directions)
