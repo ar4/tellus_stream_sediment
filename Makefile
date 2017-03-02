@@ -60,11 +60,12 @@ $(output)/$(name)_sediments.zip: $(name)_$(results) README.md LICENSE
 
 # Estimate abundance of measured substance in upstream cells (main result)
 $(output)/$(name)_%.tif: $(interim)/$(name)_measurements.csv $(interim)/$(name)_measurements.csv $(interim)/$(name)_upstream.npy $(src)/reverse_sediment.py
-	python $(src)/reverse_sediment.py --output=$@ --column=$* --measurements=$(interim)/$(name)_measurements.csv --upstream=$(interim)/$(name)_upstream.npy
+	python $(src)/reverse_sediment.py --output=$@ --column=$* --measurements=$(interim)/$(name)_measurements.csv --upstream=$(interim)/$(name)_upstream.npy --flow_directions=$(interim)/$(name)_flow_directions.tif
 
 # Determine upstream raster cells of each point in CSV
+# EPSG:29901 is the Irish National Grid
 $(interim)/$(name)_upstream.npy: $(interim)/$(name)_measurements.csv $(interim)/$(name)_flow_directions.tif $(src)/find_upstream.py
-	python $(src)/find_upstream.py --output=$@ --measurements=$(interim)/$(name)_measurements.csv --flow_directions=$(interim)/$(name)_flow_directions.tif
+	python $(src)/find_upstream.py --output=$@ --measurements=$(interim)/$(name)_measurements.csv --measurements_epsg=29901 --flow_directions=$(interim)/$(name)_flow_directions.tif
 
 
 ## Tellus input preparation
@@ -73,8 +74,12 @@ $(interim)/$(name)_upstream.npy: $(interim)/$(name)_measurements.csv $(interim)/
 $(interim)/tellus_measurements.csv: $(tellus_csvs) $(src)/merge_csvs.py
 	@echo python $(src)/merge_csvs.py $@ $^
 
+# Crop the flow directions to a region around Ireland to reduce file sizes
+$(interim)/tellus_flow_directions.tif: $(interim)/tellus_flow_directions_full.tif
+	@echo gdalwarp -srcnodata 0 -cutline $(input)/ireland_outline.shp -crop_to_cutline $^ $@
+
 # Merge HydroSHEDS flow directions into single file
-$(interim)/tellus_flow_directions.tif: $(hydrosheds_flowdirections)
+$(interim)/tellus_flow_directions_full.tif: $(hydrosheds_flowdirections)
 	@echo gdal_merge.py -o $@ $^
 
 
