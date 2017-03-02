@@ -72,7 +72,7 @@ $(interim)/$(name)_upstream.npy: $(interim)/$(name)_measurements.csv $(interim)/
 
 # Merge input CSVs into single CSV
 $(interim)/tellus_measurements.csv: $(tellus_csvs) $(src)/merge_csvs.py
-	@echo python $(src)/merge_csvs.py $@ $^
+	python $(src)/merge_csvs.py $@ $(tellus_csvs) --ni1idx=1
 
 # Crop the flow directions to a region around Ireland to reduce file sizes
 $(interim)/tellus_flow_directions.tif: $(interim)/tellus_flow_directions_full.tif
