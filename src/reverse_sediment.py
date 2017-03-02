@@ -1,11 +1,11 @@
+"""Estimate the substance abundance in cells that are upstream from measurements.
+"""
 import argparse
-import gdal, gdalnumeric, ogr, osr
+import gdal
 from scipy.sparse import csr_matrix
 from scipy.optimize import lsq_linear
 import pandas as pd
 import numpy as np
-import os
-import sys
 
 def load_data(column, measurements_file, upstream_file, flow_directions_file):
     """Load the input datasets, and extract the part that is relevant for the current substance.
@@ -28,16 +28,16 @@ def find_min_max_nonzero_coords(upstream):
     maxx = -np.inf
     miny = np.inf
     maxy = -np.inf
-    for idx in range(len(upstream)):
-        for pair in upstream[idx]:
-            if pair[1] < minx:
-                minx = pair[1]
-            if pair[1] > maxx:
-                maxx = pair[1]
-            if pair[0] < miny:
-                miny = pair[0]
-            if pair[0] > maxy:
-                maxy = pair[0]
+    for _, upstream_coords in enumerate(upstream):
+        for coord in upstream_coords:
+            if coord[1] < minx:
+                minx = coord[1]
+            if coord[1] > maxx:
+                maxx = coord[1]
+            if coord[0] < miny:
+                miny = coord[0]
+            if coord[0] > maxy:
+                maxy = coord[0]
     return minx, maxx, miny, maxy
 
 def find_nonzero_cells(upstream):
@@ -46,7 +46,6 @@ def find_nonzero_cells(upstream):
        Also return the number of nonzero entries that there will be in the
        A matrix so that this memory can be allocated in build_A.
     """
-       
     minx, maxx, miny, maxy = find_min_max_nonzero_coords(upstream)
     nx = maxx - minx + 1
     ny = maxy - miny + 1
@@ -80,9 +79,9 @@ def build_A(upstream, reduced_idxs, num_nonzero):
        A is a sparse matrix to save memory.
     """
     num_rows = len(upstream)
-    indices = np.zeros(num_nonzero,dtype=np.int)
-    indptr = np.zeros(num_rows+1,dtype=np.int)
-    Adata = np.ones(num_nonzero,dtype=np.float32)
+    indices = np.zeros(num_nonzero, dtype=np.int)
+    indptr = np.zeros(num_rows+1, dtype=np.int)
+    Adata = np.ones(num_nonzero, dtype=np.float32)
 
     nz_idx = 0
     for row_idx in range(num_rows):
@@ -106,14 +105,14 @@ def solve(A, b, full_coords, flow_directions, max_iter=2):
        is used to find the size of the 2D output, allowing the results to be
        converted from reduced coordinates to the full 2D array.
     """
-    if len(b)>0:
+    if len(b) > 0:
         res = lsq_linear(A, b, bounds=(0.0, np.inf), verbose=2, lsmr_tol='auto', max_iter=max_iter)
         res = res.x
     else:
         res = []
     nx = flow_directions.RasterXSize
     ny = flow_directions.RasterYSize
-    x = np.nan * np.ones([ny, nx],dtype=np.float32)
+    x = np.nan * np.ones([ny, nx], dtype=np.float32)
     for reduced_idx, value in enumerate(res):
         full_coord = full_coords[reduced_idx]
         x[full_coord[0], full_coord[1]] = value

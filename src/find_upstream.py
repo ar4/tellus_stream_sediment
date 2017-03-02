@@ -5,7 +5,9 @@
 import sys
 import os
 import argparse
-import gdal, gdalnumeric, ogr, osr
+import gdal
+import gdalnumeric
+import osr
 import pandas as pd
 import numpy as np
 
@@ -20,8 +22,8 @@ os.environ['GDAL_DATA'] = os.popen('gdal-config --datadir').read().rstrip()
 # e.g. if the flow direction value is 1, dx=1, dy=0, so flow is
 # to the neighbour to the west, whereas if the value is 3, flow
 # is to the south (0, 1)
-dx=[0,1,1,0,-1,-1,-1,0,1]
-dy=[0,0,1,1,1,0,-1,-1,-1]
+dx = [0, 1, 1, 0, -1, -1, -1, 0, 1]
+dy = [0, 0, 1, 1, 1, 0, -1, -1, -1]
 
 def find_upstream(flow_directions, row, col):
     """Recursively find the coordinate pairs of upstream points
@@ -30,7 +32,7 @@ def find_upstream(flow_directions, row, col):
     # 16 0  1
     # 8  4  2
     upstream = [(row, col)]
-    for k in range(1,9):
+    for k in range(1, 9):
         if (0 <= row+dy[k] < flow_directions.shape[0]) and (0 <= col+dx[k] < flow_directions.shape[1]):
             nv = flow_directions[row+dy[k], col+dx[k]]
             if nv == 0:
@@ -76,7 +78,7 @@ def load_inputs(input_csv, csv_epsg, flow_directions_file):
     sourceSR.ImportFromEPSG(csv_epsg)
     targetSR = osr.SpatialReference()
     targetSR.ImportFromWkt(raster.GetProjectionRef())
-    coordTrans = osr.CoordinateTransformation(sourceSR,targetSR)
+    coordTrans = osr.CoordinateTransformation(sourceSR, targetSR)
     geoTrans = raster.GetGeoTransform()
 
     return (input_df, flow_directions, coordTrans, geoTrans)
@@ -88,7 +90,7 @@ def run(output_file, input_csv, csv_epsg, flow_directions_file):
     (input_df, flow_directions, coordTrans, geoTrans) = load_inputs(input_csv, csv_epsg, flow_directions_file)
 
     upstream = []
-    for index, row in input_df.iterrows():
+    for _, row in input_df.iterrows():
         upstream.append(process_row(row, flow_directions, coordTrans, geoTrans))
     np.save(output_file, upstream)
 

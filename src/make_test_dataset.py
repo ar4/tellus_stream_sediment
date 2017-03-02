@@ -1,6 +1,7 @@
 import os
 import argparse
-import gdal, osr
+import gdal
+import osr
 import numpy as np
 import pandas as pd
 
@@ -8,11 +9,11 @@ import pandas as pd
 # ERROR 4: Unable to open EPSG support file gcs.csv
 os.environ['GDAL_DATA'] = os.popen('gdal-config --datadir').read().rstrip()
 
-N=5
+N = 5
 
 def create_test_flow_directions(output_path):
     flow_directions = 4*np.ones([N, 1], dtype=np.uint8)
-    flow_directions[-1,0] = 0
+    flow_directions[-1, 0] = 0
 
     driver = gdal.GetDriverByName('GTiff')
 
@@ -24,7 +25,7 @@ def create_test_flow_directions(output_path):
         0,
         55.571185968814824,
         0,
-        -0.000833397668502))  
+        -0.000833397668502))
     proj = osr.SpatialReference()
     proj.ImportFromEPSG(4326)
     dataset.SetProjection(proj.ExportToWkt())
@@ -42,7 +43,7 @@ def create_test_measurements(output_path):
     sourceSR.ImportFromEPSG(4326)
     targetSR = osr.SpatialReference()
     targetSR.ImportFromEPSG(29901)
-    coordTrans = osr.CoordinateTransformation(sourceSR,targetSR)
+    coordTrans = osr.CoordinateTransformation(sourceSR, targetSR)
     for i in range(len(easting)):
         new_coords = coordTrans.TransformPoint(float(easting[i]), float(northing[i]))
         easting[i] = new_coords[0]
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     parser.add_argument("--measurements", type=str, help="path to measurements csv file")
     parser.add_argument("--flow_directions", type=str, help="path to flow directions file")
     args = parser.parse_args()
-    if (args.measurements):
+    if args.measurements:
         create_test_measurements(args.measurements)
-    if (args.flow_directions):
+    if args.flow_directions:
         create_test_flow_directions(args.flow_directions)
