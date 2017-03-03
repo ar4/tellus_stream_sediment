@@ -1,4 +1,4 @@
-"""Estimate the substance abundance in cells that are upstream from measurements.
+"""Estimate the substance concentration in cells that are upstream from measurements.
 """
 import argparse
 import gdal
@@ -72,9 +72,9 @@ def find_nonzero_cells(upstream):
     return full_coords, reduced_idxs, num_nonzero, minx, miny
 
 def build_A(upstream, full_coords, reduced_idxs, num_nonzero, minx, miny):
-    """Form the A matrix that will be used to solve for substance abundance.
+    """Form the A matrix that will be used to solve for substance concentration.
        This is the A matrix in the Ax=b system of equations, where x is a
-       column vector of the substance abundance to be solved for, and b is a
+       column vector of the substance concentration to be solved for, and b is a
        column vector of the measurements.
        A is a sparse matrix to save memory.
     """
@@ -98,9 +98,9 @@ def build_A(upstream, full_coords, reduced_idxs, num_nonzero, minx, miny):
     return A
 
 def solve(A, b, full_coords, flow_directions, max_iter=2):
-    """Solve for the substance abundance.
+    """Solve for the substance concentration.
        The lsq_linear solver is used so that a lower bound of 0 can be set on the
-       output (negative substance abundance is not allowed).
+       output (negative substance concentration is not allowed).
        The flow_directions file, which was used to generate the coordinates in upstream,
        is used to find the size of the 2D output, allowing the results to be
        converted from reduced coordinates to the full 2D array.
@@ -119,7 +119,7 @@ def solve(A, b, full_coords, flow_directions, max_iter=2):
     return x
 
 def write_output(x, output_file, flow_directions):
-    """Write the output substance abundance map to the specified file in GeoTiff format.
+    """Write the output substance concentration map to the specified file in GeoTiff format.
        The flow_directions file is used as a prototype for the output file, with the
        differences being a different datatype and NoData value.
     """
