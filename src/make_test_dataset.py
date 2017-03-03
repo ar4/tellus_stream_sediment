@@ -9,15 +9,23 @@ import pandas as pd
 # ERROR 4: Unable to open EPSG support file gcs.csv
 os.environ['GDAL_DATA'] = os.popen('gdal-config --datadir').read().rstrip()
 
-N = 5
+NX = 3
+NY = 6
 
 def create_test_flow_directions(output_path):
-    flow_directions = 4*np.ones([N, 1], dtype=np.uint8)
-    flow_directions[-1, 0] = 0
+    flow_directions = np.zeros([NY, NX], dtype=np.uint8)
+    flow_directions[1:5, 1] = np.uint8(4)
+    # 0 0 0
+    # 0 4 0
+    # 0 4 0
+    # 0 4 0
+    # 0 4 0
+    # 0 0 0
+    # 0: no flow, 4: flow south
 
     driver = gdal.GetDriverByName('GTiff')
 
-    dataset = driver.Create(output_path, 1, N, 1, gdal.GDT_Byte)
+    dataset = driver.Create(output_path, NX, NY, 1, gdal.GDT_Byte)
 
     dataset.SetGeoTransform((
         -10.601476282215518,
@@ -33,10 +41,10 @@ def create_test_flow_directions(output_path):
     dataset = None
 
 def create_test_measurements(output_path):
-    easting = (-10.601476282215518 + 0.5*0.000833385971806)*np.ones(2)
+    easting = (-10.601476282215518 + 1.5*0.000833385971806)*np.ones(2)
     northing = np.zeros(2)
-    northing[0] = 55.571185968814824 - (0.5+1)*0.000833397668502
-    northing[1] = 55.571185968814824 - (0.5+3)*0.000833397668502
+    northing[0] = 55.571185968814824 - (0.5+2)*0.000833397668502
+    northing[1] = 55.571185968814824 - (0.5+4)*0.000833397668502
     # Reproject vector geometry from WGS84 to Irish National Grid
     #'EPSG:29901, OSNI 1952 / Irish National Grid'
     sourceSR = osr.SpatialReference()
