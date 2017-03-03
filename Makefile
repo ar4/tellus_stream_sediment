@@ -26,13 +26,15 @@ else
 ## Tellus
 
 # outputs
-tellus_results = $(output)/Na2O_%.tif $(output)/Al2O3_%.tif $(output)/SiO2_%.tif $(output)/S_mgkg.tif $(output)/Cl_mgkg.tif $(output)/TiO2_%.tif $(output)/Sc_mgkg.tif $(output)/V_mgkg.tif $(output)/Co_mgkg.tif $(output)/Ga_mgkg.tif $(output)/Ge_mgkg.tif $(output)/Br_mgkg.tif $(output)/Rb_mgkg.tif $(output)/Sr_mgkg.tif $(output)/Y_mgkg.tif $(output)/Zr_mgkg.tif $(output)/Nb_mgkg.tif $(output)/Nd_mgkg.tif $(output)/Sm_mgkg.tif $(output)/Yb_mgkg.tif $(output)/Hf_mgkg.tif $(output)/Ta_mgkg.tif $(output)/W_mgkg.tif $(output)/Tl_mgkg.tif $(output)/Bi_mgkg.tif $(output)/Th_mgkg.tif $(output)/Ag_mgkg.tif $(output)/In_mgkg.tif $(output)/Te_mgkg.tif $(output)/I_mgkg.tif $(output)/Cs_mgkg.tif $(output)/La_mgkg.tif $(output)/Au_ugkg.tif $(output)/Pd_ugkg.tif $(output)/Pt_ugkg.tif $(output)/MgO_%.tif $(output)/P2O5_%.tif $(output)/K2O_%.tif $(output)/CaO_%.tif $(output)/MnO_%.tif $(output)/Fe2O3_%.tif $(output)/Cr_mgkg.tif $(output)/Ba_mgkg.tif $(output)/Ni_mgkg.tif $(output)/Cu_mgkg.tif $(output)/Zn_mgkg.tif $(output)/As_mgkg.tif $(output)/Se_mgkg.tif $(output)/Mo_mgkg.tif $(output)/Pb_mgkg.tif $(output)/U_mgkg.tif $(output)/Cd_mgkg.tif $(output)/Sn_mgkg.tif $(output)/Sb_mgkg.tif $(output)/Ce_mgkg.tif
+tellus_results = $(output)/tellus_Na2O_%.tif $(output)/tellus_Al2O3_%.tif $(output)/tellus_SiO2_%.tif $(output)/tellus_S_mgkg.tif $(output)/tellus_Cl_mgkg.tif $(output)/tellus_TiO2_%.tif $(output)/tellus_Sc_mgkg.tif $(output)/tellus_V_mgkg.tif $(output)/tellus_Co_mgkg.tif $(output)/tellus_Ga_mgkg.tif $(output)/tellus_Ge_mgkg.tif $(output)/tellus_Br_mgkg.tif $(output)/tellus_Rb_mgkg.tif $(output)/tellus_Sr_mgkg.tif $(output)/tellus_Y_mgkg.tif $(output)/tellus_Zr_mgkg.tif $(output)/tellus_Nb_mgkg.tif $(output)/tellus_Nd_mgkg.tif $(output)/tellus_Sm_mgkg.tif $(output)/tellus_Yb_mgkg.tif $(output)/tellus_Hf_mgkg.tif $(output)/tellus_Ta_mgkg.tif $(output)/tellus_W_mgkg.tif $(output)/tellus_Tl_mgkg.tif $(output)/tellus_Bi_mgkg.tif $(output)/tellus_Th_mgkg.tif $(output)/tellus_Ag_mgkg.tif $(output)/tellus_In_mgkg.tif $(output)/tellus_Te_mgkg.tif $(output)/tellus_I_mgkg.tif $(output)/tellus_Cs_mgkg.tif $(output)/tellus_La_mgkg.tif $(output)/tellus_Au_ugkg.tif $(output)/tellus_Pd_ugkg.tif $(output)/tellus_Pt_ugkg.tif $(output)/tellus_MgO_%.tif $(output)/tellus_P2O5_%.tif $(output)/tellus_K2O_%.tif $(output)/tellus_CaO_%.tif $(output)/tellus_MnO_%.tif $(output)/tellus_Fe2O3_%.tif $(output)/tellus_Cr_mgkg.tif $(output)/tellus_Ba_mgkg.tif $(output)/tellus_Ni_mgkg.tif $(output)/tellus_Cu_mgkg.tif $(output)/tellus_Zn_mgkg.tif $(output)/tellus_As_mgkg.tif $(output)/tellus_Se_mgkg.tif $(output)/tellus_Mo_mgkg.tif $(output)/tellus_Pb_mgkg.tif $(output)/tellus_U_mgkg.tif $(output)/tellus_Cd_mgkg.tif $(output)/tellus_Sn_mgkg.tif $(output)/tellus_Sb_mgkg.tif $(output)/tellus_Ce_mgkg.tif
 
 # inputs
-northern_ireland_csv = $(input)/Regional_Sediments_XRF.csv
+northern_ireland_set1_csv = $(input)/regionalsedimentsxrfset1.csv
+northern_ireland_set2_csv = $(input)/regionalsedimentsxrfset2.csv
+northern_ireland_auandpge_csv = $(input)/regionalsedimentsxrfauandpge.csv
 2013_csv = $(input)/GSI_Tellus_2013_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.1.csv
 2016_csv = $(input)/GSI_Tellus_2016_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.0.csv
-tellus_csvs = $(northern_ireland_csv) $(2013_csv) $(2016_csv)
+tellus_csvs = $(northern_ireland_set1_csv) $(northern_ireland_set2_csv) $(northern_ireland_auandpge_csv) $(2013_csv) $(2016_csv)
 hydrosheds_flowdirections = $(input)/n50w005_dir.bil $(input)/n50w010_dir.bil $(input)/n50w015_dir.bil $(input)/n55w005_dir.bil $(input)/n55w010_dir.bil $(input)/n55w015_dir.bil
 
 
@@ -52,11 +54,11 @@ test: test_find_upstream test_reverse_sediment
 ## Processing flow
 
 # Zip results
-$(output)/$(name)_sediments.zip: $(name)_$(results) README.md LICENSE
-	@echo mkdir $(output)/$(name)_sediments
-	@echo cp $^ $(output)/$(name)_sediments
-	@echo zip $@ $(output)/$(name)_sediments
-	@echo rm -r $(output)/$(name)_sediments
+$(output)/$(name)_sediments.zip: $($(name)_results) README.md LICENSE
+	mkdir $(output)/$(name)_sediments
+	cp $^ $(output)/$(name)_sediments
+	zip $@ $(output)/$(name)_sediments
+	rm -r $(output)/$(name)_sediments
 
 # Estimate abundance of measured substance in upstream cells (main result)
 $(output)/$(name)_%.tif: $(interim)/$(name)_measurements.csv $(interim)/$(name)_measurements.csv $(interim)/$(name)_upstream.npy $(src)/reverse_sediment.py
@@ -72,15 +74,15 @@ $(interim)/$(name)_upstream.npy: $(interim)/$(name)_measurements.csv $(interim)/
 
 # Merge input CSVs into single CSV
 $(interim)/tellus_measurements.csv: $(tellus_csvs) $(src)/merge_csvs.py
-	python $(src)/merge_csvs.py $@ $(tellus_csvs) --ni1idx=1
+	python $(src)/merge_csvs.py $@ $(tellus_csvs) --ni1idx=0 --ni2idx=1 --niauandpgeidx=2
 
 # Crop the flow directions to a region around Ireland to reduce file sizes
 $(interim)/tellus_flow_directions.tif: $(interim)/tellus_flow_directions_full.tif
-	@echo gdalwarp -srcnodata 0 -cutline $(input)/ireland_outline.shp -crop_to_cutline $^ $@
+	gdalwarp -srcnodata 0 -cutline $(input)/ireland_outline.shp -crop_to_cutline $^ $@
 
 # Merge HydroSHEDS flow directions into single file
 $(interim)/tellus_flow_directions_full.tif: $(hydrosheds_flowdirections)
-	@echo gdal_merge.py -o $@ $^
+	gdal_merge.py -o $@ $^
 
 
 ## Test input preparation
