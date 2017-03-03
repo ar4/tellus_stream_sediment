@@ -69,9 +69,9 @@ def find_nonzero_cells(upstream):
                 reduced_idxs[coord[0] - miny, coord[1] - minx] = reduced_idx
                 reduced_idx += 1
             num_nonzero += 1
-    return full_coords, reduced_idxs, num_nonzero
+    return full_coords, reduced_idxs, num_nonzero, minx, miny
 
-def build_A(upstream, reduced_idxs, num_nonzero):
+def build_A(upstream, full_coords, reduced_idxs, num_nonzero, minx, miny):
     """Form the A matrix that will be used to solve for substance abundance.
        This is the A matrix in the Ax=b system of equations, where x is a
        column vector of the substance abundance to be solved for, and b is a
@@ -87,13 +87,13 @@ def build_A(upstream, reduced_idxs, num_nonzero):
     for row_idx in range(num_rows):
         indptr[row_idx] = nz_idx
         for coord in upstream[row_idx]:
-            reduced_idx = reduced_idxs[coord[0], coord[1]]
+            reduced_idx = reduced_idxs[coord[0] - miny, coord[1] - minx]
             indices[nz_idx] = reduced_idx
             Adata[nz_idx] = 1.0/len(upstream[row_idx])
             nz_idx += 1
     assert(nz_idx == num_nonzero)
     indptr[-1] = nz_idx
-    A = csr_matrix((Adata, indices, indptr), shape=(num_rows, len(reduced_idxs)))
+    A = csr_matrix((Adata, indices, indptr), shape=(num_rows, len(full_coords)))
 
     return A
 
@@ -138,9 +138,9 @@ def run(output_file, column, measurements_file, upstream_file, flow_directions_f
     """Main driver.
     """
     measurements, upstream, flow_directions = load_data(column, measurements_file, upstream_file, flow_directions_file)
-    full_coords, reduced_idxs, num_nonzero = find_nonzero_cells(upstream)
+    full_coords, reduced_idxs, num_nonzero, minx, miny = find_nonzero_cells(upstream)
 
-    A = build_A(upstream, reduced_idxs, num_nonzero)
+    A = build_A(upstream, full_coords, reduced_idxs, num_nonzero, minx, miny)
     b = measurements
 
     x = solve(A, b, full_coords, flow_directions)
