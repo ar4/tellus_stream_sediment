@@ -14,8 +14,8 @@ The substance concentration maps are saved in GeoTIFF format, one for each subst
 1. Download the free, open source [QGIS](https://www.qgis.org) software and install it.
 2. Start QGIS
 3. Click Layer > Add Raster Layer
-4. Download `tellus_sediment.zip` if you have not done so already
-4. Find the `tellus_sediment.zip` file and open it
+4. Download `tellus_sediments.zip` if you have not done so already
+4. Find the `tellus_sediments.zip` file and open it
 5. All of the substance concentration maps should open as layers
 6. Select desired layer
 7. To make it easier to see, we will display the layer in colour
@@ -58,15 +58,15 @@ The Tellus documents describe the variations between the methods used in Ireland
 #Licenses
 
 ##Tellus data (Ireland)
-`data/input/GSI_Tellus_2013_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.1.csv`
-`data/input/GSI_Tellus_2016_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.0.csv`
+* `data/input/GSI_Tellus_2013_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.1.csv`
+* `data/input/GSI_Tellus_2016_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.0.csv`
 
 The copyright of these files is owned by the Government of Ireland. It is subject to the Irish PSI license, which allows distribution.
 
 ##Tellus data (Northern Ireland)
-`data/input/regionalsedimentsxrfset1.csv`
-`data/input/regionalsedimentsxrfset2.csv`
-`data/input/regionalsedimentsxrfauandpge.csv`
+* `data/input/regionalsedimentsxrfset1.csv`
+* `data/input/regionalsedimentsxrfset2.csv`
+* `data/input/regionalsedimentsxrfauandpge.csv`
 
 These files are Crown Copyright and subject to the Open Government License for public sector information, which allows distribution. 
 
