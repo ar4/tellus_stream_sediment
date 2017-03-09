@@ -9,20 +9,24 @@ To do this, I use a flow directions map. This is a map that predicts the directi
 This will contain a link to download the data when they are available.
 
 #How to view
-The substance concentration maps are saved in GeoTIFF format, one for each substance, and then compressed into a zip file. Many GIS viewers are able to open the zip file directly. If you are not an experienced GIS user, I provide instructions to view the maps:
+The substance concentration maps are saved in GeoTIFF format, one for each substance, and then compressed into a zip file. All popular GIS viewers should be able to open the files. If you are not an experienced GIS user, I provide instructions to view the maps below. These instructions are for QGIS version 2.18. The steps may differ slightly if you are using a different version.
 
-1. Download the free, open source [QGIS](https://www.qgis.org) software and install it.
-2. Start QGIS
-3. Click Layer > Add Raster Layer
-4. Download `tellus_sediments.zip` if you have not done so already
-4. Find the `tellus_sediments.zip` file and open it
-5. All of the substance concentration maps should open as layers
-6. Select desired layer
-7. To make it easier to see, we will display the layer in colour
-8. Right click on the layer and click Properties
-9. Click on the Style tab
-10. Change from Gray to Pseudo-colour
-11. Click OK
+1. Download `tellus_sediments.zip` if you have not done so already (see above)
+2. Unzip `tellus_sediments.zip`
+3. Download the free, open source [QGIS](https://www.qgis.org) software and install it
+4. Start QGIS
+5. Click Layer > Add Layer > Add Raster Layer
+6. Find the `tellus_sediments` directory where you unzipped `tellus_sediments.zip`, and open it
+7. Choose the file for the substance that you wish to view, such as `tellus_Ag_mgkg.tif`, and click Open
+8. You should see a map showing the substance concentrations
+9. To make it easier to see, we will display the layer in colour in the next steps
+10. Right click on the layer name (`tellus_Ag_mgkg` in this example) in the Layers Panel and click Properties
+11. Click on the Style tab, if it is not already open
+12. Change "Render type" from "Singleband gray" to "Singleband pseudocolor"
+13. In the "Load min/max values" section, click "Classify"
+14. Click "OK"
+15. You should now see the map with different colours indicating the substance concentration
+16. With the default setting, "Continuous", the concentration range is divided into equal intervals for each colour, but you may find it more useful to change this setting (in the "Load min/max values" section of the Style tab) to "Quantile"
 
 #How to run
 These are instructions for running the code that generates the output `tellus_sediments.zip` file. You don't need to do this if you are only interested in the data (which you can download above). These instructions are for running on a Linux system. Some modifications may be necessary for other operating systems.
@@ -53,6 +57,8 @@ Another that was also already mentioned is that erosion and deposition rates are
 
 The analysis also relies on the accuracy of the HydroSHEDS flow directions dataset. This assumes that D8 flow directions (flow in each cell is directed entirely into one of its eight neighbours) is a good approximation. I may experiment with using another approach in the future, such as DInf, but these can raise other issues.
 
+Similarly, the Tellus measurements are also assumed to be correct. This applies not only to the substance concentrations that were measured, but also the reported locations where the samples were collected. Errors in the latter would result in the measured concentration being attributed to the wrong upstream area.
+
 The Tellus documents describe the variations between the methods used in Ireland and Northern Ireland to produce the measurements, but I assumed that errors introduced by neglecting these differences were small compared with the other inaccuracies.
 
 #Licenses
@@ -71,7 +77,7 @@ The copyright of these files is owned by the Government of Ireland. It is subjec
 These files are Crown Copyright and subject to the Open Government License for public sector information, which allows distribution. 
 
 ##Source code
-I have chosen to apply the GPLv3 license to all source code. This may be viewed in the LICENSE file.
+I have chosen to apply the GPLv3 license to all source code. This may be viewed in the [LICENSE](https://www.github.com/ar4/tellus_stream_sediment/blob/master/LICENSE) file.
 
 ##tellus_sediments.zip
 I use the CC BY license, which allows you to freely use the substance concentration maps, including in publications, as long as you attribute the work to Alan Richardson (Ausar Geophysical).

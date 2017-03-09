@@ -54,13 +54,13 @@ test: test_find_upstream test_reverse_sediment
 ## Processing flow
 
 # Zip results
-$(output)/$(name)_sediments.zip: $($(name)_results) README.md LICENSE
-	mkdir $(output)/$(name)_sediments
-	cp $^ $(output)/$(name)_sediments
-	zip $@ $(output)/$(name)_sediments
-	rm -r $(output)/$(name)_sediments
+$(output)/$(name)_sediments.zip: $($(name)_results) README.md
+	mkdir $(name)_sediments
+	cp $^ $(name)_sediments
+	zip $@ $(name)_sediments
+	rm -r $(name)_sediments
 
-# Estimate abundance of measured substance in upstream cells (main result)
+# Estimate concentration of measured substance in upstream cells (main result)
 $(output)/$(name)_%.tif: $(interim)/$(name)_measurements.csv $(interim)/$(name)_measurements.csv $(interim)/$(name)_upstream.npy $(src)/reverse_sediment.py
 	python $(src)/reverse_sediment.py --output=$@ --column=$* --measurements=$(interim)/$(name)_measurements.csv --upstream=$(interim)/$(name)_upstream.npy --flow_directions=$(interim)/$(name)_flow_directions.tif
 

@@ -97,7 +97,7 @@ def build_A(upstream, full_coords, reduced_idxs, num_nonzero, minx, miny):
 
     return A
 
-def solve(A, b, full_coords, flow_directions, max_iter=2):
+def solve(A, b, full_coords, flow_directions, max_iter=4):
     """Solve for the substance concentration.
        The lsq_linear solver is used so that a lower bound of 0 can be set on the
        output (negative substance concentration is not allowed).
