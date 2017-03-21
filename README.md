@@ -5,10 +5,10 @@ The Tellus project has released measurements of the concentration of various sub
 
 To do this, I use a flow directions map. This is a map that predicts the direction water will flow in at each point on the landscape. I can then determine the upstream area of each measurement point - the region of the landscape that drains through that point. Making some assumptions, including that all of the measured substance arrived at the measurement point by overland flow, I use this information to make a map of estimated substance concentration.
 
-#Data download
+# Data download
 [tellus_sediments.zip](https://drive.google.com/uc?export=download&confirm=mkfd&id=0B22sULzRxoQfMWlyM3d0SW94WDA)
 
-#How to view
+# How to view
 The substance concentration maps are saved in GeoTIFF format, one for each substance, and then compressed into a zip file. All popular GIS viewers should be able to open the files. If you are not an experienced GIS user, I provide instructions to view the maps below. These instructions are for QGIS version 2.18. The steps may differ slightly if you are using a different version.
 
 1. Download `tellus_sediments.zip` if you have not done so already (see above)
@@ -28,7 +28,7 @@ The substance concentration maps are saved in GeoTIFF format, one for each subst
 15. You should now see the map with different colours indicating the substance concentration
 16. With the default setting, "Continuous", the concentration range is divided into equal intervals for each colour, but you may find it more useful to change this setting (in the "Load min/max values" section of the Style tab) to "Quantile"
 
-#How to run
+# How to run
 These are instructions for running the code that generates the output `tellus_sediments.zip` file. You don't need to do this if you are only interested in the data (which you can download above). These instructions are for running on a Linux system. Some modifications may be necessary for other operating systems.
 
 Download the package using the command `git clone https://github.com/ar4/tellus_stream_sediments.git --depth=1`. Then descend into the downloaded directory with `cd tellus_stream_sediments`.
@@ -41,7 +41,7 @@ Test your installation by running `make test`. All tests should pass.
 
 You should now be able to produce `data/output/tellus_sediments.zip` by simply running `make`. It will take a few hours.
 
-#Details
+# Details
 The flow directions map divides the landscape into grid cells, and assigns a flow direction to each cell. To find the upstream area of a measurement point I therefore examine the eight immediate neighbour cells around the cell that contains the measurement point, to determine which of them drain into the measurement cell. I then examine the neighbours of those that do drain to the measurement point, and find which of their neighbours drain to them. Continuing this recursively, I can find all of the cells on the landscape that drain to a particular measurement point. This is done in `src/find_upstream.py`. Assuming that all of the sediment in the samples comes from overland flow, and ignoring possible spatial variations in erosion and deposition of sediment, I can then determine the likely substance concentration of the upstream cells by solving a linear system consisting of rows like:
 
 `sum_j a_i * x_j = b_i`
@@ -50,7 +50,7 @@ where `b_i` is the concentration value of measurement `i`, `x_j` is the concentr
 
 I form a system of equations of the form `A*x = b`, and solve it for `x`. I use a solver that is constrained to not produce any negative values, as I do not allow negative substance concentrations. This is done in `src/reverse_sediment.py`.
 
-##Assumptions
+## Assumptions
 I make several assumptions in this analysis. One that has already been mentioned is that all of the sediment arrives at the measurement points by overland flow, not through underground flow. This assumption is necessary because I only know overland flow directions.
 
 Another that was also already mentioned is that erosion and deposition rates are the same at all points. Equal concentrations of a substance at any cell upstream of the measurement point will thus contribute equally to the measured concentration. In reality this is unlikely; much of the sampled sediment probably comes from the fast-flowing mountain streams where erosion is high, and will depend on land cover and usage. Future revisions may incorporate an estimate of erosion rates.
@@ -61,25 +61,25 @@ Similarly, the Tellus measurements are also assumed to be correct. This applies 
 
 The Tellus documents describe the variations between the methods used in Ireland and Northern Ireland to produce the measurements, but I assumed that errors introduced by neglecting these differences were small compared with the other inaccuracies.
 
-#Licenses
+# Licenses
 
-##Tellus data (Ireland)
+## Tellus data (Ireland)
 * `data/input/GSI_Tellus_2013_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.1.csv`
 * `data/input/GSI_Tellus_2016_StreamSediment_XRFS_FA_ICPMS_geochemical_data_v1.0.csv`
 
 The copyright of these files is owned by the Government of Ireland. It is subject to the Irish PSI license, which allows distribution.
 
-##Tellus data (Northern Ireland)
+## Tellus data (Northern Ireland)
 * `data/input/regionalsedimentsxrfset1.csv`
 * `data/input/regionalsedimentsxrfset2.csv`
 * `data/input/regionalsedimentsxrfauandpge.csv`
 
 These files are Crown Copyright and subject to the Open Government License for public sector information, which allows distribution. 
 
-##Source code
+## Source code
 I have chosen to apply the GPLv3 license to all source code. This may be viewed in the [LICENSE](https://www.github.com/ar4/tellus_stream_sediment/blob/master/LICENSE) file.
 
-##tellus_sediments.zip
+## tellus_sediments.zip
 I use the CC BY license, which allows you to freely use the substance concentration maps, including in publications, as long as you attribute the work to Alan Richardson (Ausar Geophysical).
 
 This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
