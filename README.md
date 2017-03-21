@@ -6,7 +6,7 @@ The Tellus project has released measurements of the concentration of various sub
 To do this, I use a flow directions map. This is a map that predicts the direction water will flow in at each point on the landscape. I can then determine the upstream area of each measurement point - the region of the landscape that drains through that point. Making some assumptions, including that all of the measured substance arrived at the measurement point by overland flow, I use this information to make a map of estimated substance concentration.
 
 #Data download
-This will contain a link to download the data when they are available.
+[tellus_sediments.zip](https://drive.google.com/uc?export=download&confirm=mkfd&id=0B22sULzRxoQfMWlyM3d0SW94WDA)
 
 #How to view
 The substance concentration maps are saved in GeoTIFF format, one for each substance, and then compressed into a zip file. All popular GIS viewers should be able to open the files. If you are not an experienced GIS user, I provide instructions to view the maps below. These instructions are for QGIS version 2.18. The steps may differ slightly if you are using a different version.
