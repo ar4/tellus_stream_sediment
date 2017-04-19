@@ -5,6 +5,8 @@ The Tellus project has released measurements of the concentration of various sub
 
 To do this, I use a flow directions map. This is a map that predicts the direction water will flow in at each point on the landscape. I can then determine the upstream area of each measurement point - the region of the landscape that drains through that point. Making some assumptions, including that all of the measured substance arrived at the measurement point by overland flow, I use this information to make a map of estimated substance concentration.
 
+I have created a Jupyter Notebook that plots the data to provide a quick look at the results: [Visualising the Tellus stream sediment data](https://github.com/ar4/tellus_stream_sediment/blob/master/notebooks/tellus_stream_sediment.ipynb).
+
 # Data download
 [tellus_sediments.zip](https://drive.google.com/uc?export=download&confirm=mkfd&id=0B22sULzRxoQfMWlyM3d0SW94WDA)
 
